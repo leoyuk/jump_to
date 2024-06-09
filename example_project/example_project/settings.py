@@ -10,17 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os, json
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_FILES = os.path.join(BASE_DIR, 'secrets.json')
+
+with open(SECRET_FILES) as f:
+    secrets = json.loads(f.read())
+
+def get_secret(setting, secrets=secrets):
+    try : 
+        return secrets[setting]
+    except KeyError:
+        error_log = "Set the {} environment variable".format(setting)
+        raise ImproperlyConfigured(error_log)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g97xz9_x2gz6ouhg*x7#hlunr9!92vyeh1e7z__!=u6v3gpv18'
+SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'example_project.urls'
@@ -136,3 +151,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_CREDENTIALS = True
