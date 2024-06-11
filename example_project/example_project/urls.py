@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from example_app.views import hello, hello_rest_api
+from example_app.views import hello, hello_rest_api,home, HelloWorldView, HelloWorldClassView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', hello),
     path('api/hello/', hello_rest_api, name = 'hello_rest_api'),
+    path('api/home/', home),
+    path('hellocbv/', HelloWorldView.as_view()),
+    path('api/hellocbv/', HelloWorldClassView.as_view()),
 ]
