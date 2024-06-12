@@ -1,3 +1,5 @@
+from dataclasses import fields
+from email import message
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -6,7 +8,10 @@ from django.http import HttpResponse
 from django.views import View
 
 from .models import Author, Book
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+from django import forms
+from example_app.forms import ContactFrom, BookForm
 
 # Function Based View
 def hello(request):
@@ -65,3 +70,37 @@ def home(request):
     return HttpResponse(book_data["first_book"])
 
 
+def home_templates(request):
+    data = {
+        'name' : 'John Doe',
+        'age' : 25,
+        'country' : 'USA',
+    }
+    return render(request, 'example_app/home.html', context=data)
+
+
+class UserRegister(View):
+    def post(self, request):
+        form = ContactFrom(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+
+
+
+def create_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+
+    else : #method get
+        form = BookForm()
+    return render(request, 'example_app/create_book.html', {'form':form})
+
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'example_app/book_list.html', {'books':books})
