@@ -1,0 +1,15 @@
+<!--create book-->
+
+{% extends 'example_app/base.html' %}
+
+{% block title %} 책 생성하기 {% endblock %}
+
+{% block content%}
+<h2> 책 생성하기 </h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">저장</button>
+</form>
+
+{% endblock %}

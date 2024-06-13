@@ -1,5 +1,6 @@
+from dataclasses import fields
 from django import forms
-from example_app.models import Book
+from example_app.models import Book, Author
 
 #Form declare like model
 class ContactFrom(forms.Form):
@@ -12,4 +13,10 @@ class ContactFrom(forms.Form):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
+        fields = '__all__'
+
+
+class BookAuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
         fields = '__all__'

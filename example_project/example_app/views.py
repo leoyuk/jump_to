@@ -11,7 +11,7 @@ from .models import Author, Book
 from django.shortcuts import render, redirect
 
 from django import forms
-from example_app.forms import ContactFrom, BookForm
+from example_app.forms import ContactFrom, BookForm, BookAuthorForm
 
 # Function Based View
 def hello(request):
@@ -89,7 +89,6 @@ class UserRegister(View):
 
 
 
-
 def create_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -104,3 +103,18 @@ def create_book(request):
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'example_app/book_list.html', {'books':books})
+
+class BookAuthorView(View):
+
+    def get(self, request):
+        form = BookAuthorForm()
+        return render(request, 'example_app/create_author.html', {'form':form})
+
+    def post(self, request):
+        form = BookAuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+
+        else :
+            BookAuthorView.get(request)

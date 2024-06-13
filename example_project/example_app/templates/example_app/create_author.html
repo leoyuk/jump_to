@@ -1,0 +1,14 @@
+{% extends 'example_app/base.html'%}
+
+{% block title%}Create Author{%endblock%}
+
+{% block content%}
+
+<form method='post'>
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">저장</button>
+
+</form>
+
+{%endblock%}
