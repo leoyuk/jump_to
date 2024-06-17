@@ -1,5 +1,3 @@
-from dataclasses import fields
-from email import message
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,11 +5,13 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 from django.views import View
 
+from .serializers import BookSerializer
+
 from .models import Author, Book
 from django.shortcuts import render, redirect
 
 from django import forms
-from example_app.forms import ContactFrom, BookForm, BookAuthorForm
+from .forms import ContactFrom, BookForm, BookAuthorForm
 
 # Function Based View
 def hello(request):
@@ -118,3 +118,14 @@ class BookAuthorView(View):
 
         else :
             BookAuthorView.get(request)
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_book_byserializer(request):
+    serializer = BookSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status = 201)
+    return Response(serializer.errors, status=400)

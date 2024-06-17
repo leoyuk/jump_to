@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import hello, hello_rest_api,home, HelloWorldView, HelloWorldClassView, home_templates, create_book, book_list, BookAuthorView
+from .views import hello, hello_rest_api,home, HelloWorldView, HelloWorldClassView, home_templates, create_book, book_list, BookAuthorView, create_book_byserializer
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('createbook/', create_book),
     path('booklist/', book_list, name='book_list'),
     path('createauthor/', BookAuthorView.as_view()),
+    path('api/createbook/', create_book_byserializer, name='create_book_byserializer'),
 ]
