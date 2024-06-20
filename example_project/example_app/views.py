@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from django.http import HttpResponse
 from django.views import View
 
@@ -129,3 +130,17 @@ def create_book_byserializer(request):
         serializer.save()
         return Response(serializer.data, status = 201)
     return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def print_book(request):
+    book = Book.objects.get(id = 1)
+    serializer = BookSerializer(book)
+    return Response(serializer.data)
+
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
