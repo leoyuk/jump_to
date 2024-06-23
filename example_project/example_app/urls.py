@@ -1,16 +1,20 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from .views import BookViewSet, hello, hello_rest_api,home, HelloWorldView, HelloWorldClassView, home_templates, create_book, book_list, BookAuthorView, create_book_byserializer, print_book
 
-booklist = BookViewSet.as_view({
-    'get' : 'list',
-    'post' : 'create'
-})
+# booklist = BookViewSet.as_view({
+#     'get' : 'list',
+#     'post' : 'create'
+# })
 
-bookdetail = BookViewSet.as_view({
-    'get' : 'retrieve',
-    'put' : 'update',
-    'delete' : 'destroy'
-})
+# bookdetail = BookViewSet.as_view({
+#     'get' : 'retrieve',
+#     'put' : 'update',
+#     'delete' : 'destroy'
+# })
+
+router = routers.DefaultRouter()
+router.register('books', BookViewSet)
 
 urlpatterns = [
     path('hello/', hello),
@@ -24,6 +28,7 @@ urlpatterns = [
     path('createauthor/', BookAuthorView.as_view()),
     path('api/createbook/', create_book_byserializer, name='create_book_byserializer'),
     path('api/retrievebook/', print_book,),
-    path('api/book/', booklist, name='book-list'),
-    path('api/book/<int:pk>', bookdetail, name="book-detail"),
+    path('api/', include(router.urls)),
+    # path('api/book/', booklist, name='book-list'),
+    # path('api/book/<int:pk>', bookdetail, name="book-detail"),
 ]
